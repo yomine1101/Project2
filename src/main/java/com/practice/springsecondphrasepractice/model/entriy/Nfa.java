@@ -4,11 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -44,5 +43,5 @@ public class Nfa {
 
     @NotNull
     @Column(name = "nfa_u_time")
-    private String nfaUTime;
+    private LocalDateTime nfaUTime;
 }

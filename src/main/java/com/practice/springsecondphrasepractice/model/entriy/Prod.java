@@ -22,11 +22,11 @@ public class Prod {
 
     @Id
     @Column(name = "prod_id")
-    private String ProdId;
+    private String prodId;
 
     @NotNull
     @Column(name = "prod_kind")
-    private String budType;
+    private String prodKind;
 
     @NotNull
     @Column(name = "prod_name")
@@ -46,9 +46,9 @@ public class Prod {
 
     @NotNull
     @Column(name = "prod_i_time")
-    private String prodITime;
+    private LocalDateTime prodITime;
 
     @NotNull
     @Column(name = "prod_u_time")
-    private String prodUTime;
+    private LocalDateTime prodUTime;
 }
