@@ -1,6 +1,5 @@
 package com.practice.springsecondphrasepractice.service;
 
-import aj.org.objectweb.asm.TypeReference;
 import com.practice.springsecondphrasepractice.controller.dto.request.Nfa.CreateNfaRequest;
 import com.practice.springsecondphrasepractice.controller.dto.request.Nfa.DeleteNfaRequest;
 import com.practice.springsecondphrasepractice.controller.dto.request.Nfa.UpdateNfaRequest;
@@ -13,7 +12,6 @@ import com.practice.springsecondphrasepractice.model.entriy.Nfa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.xml.crypto.Data;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,14 +25,14 @@ public class NfaService {
     NfaRepository nfaRepository;
 
     public List<NfaResponse> getAllNfa() throws Exception {
-        List<Nfa> responseList = nfaRepository.findAll();
+        List<Nfa> response = nfaRepository.findAll();
         try {
-            if (responseList.isEmpty()) {
+            if (response.isEmpty()) {
                 throw new DataNotFoundException("資料不存在");
             }
-            responseList.stream().filter(nfa -> nfa.getNfaEnable().equals("Y")).collect(Collectors.toList());
-            List<NfaResponse> response = nfaResponses(responseList);
-            return response;
+            response.stream().filter(nfa -> nfa.getNfaEnable().equals("Y")).collect(Collectors.toList());
+//            List<Nfa> response = nfaResponses(responseList);
+            return nfaResponses(response);
         } catch (Exception e) {
             if (e instanceof DataNotFoundException) {
                 throw e;
@@ -59,7 +57,8 @@ public class NfaService {
         return nfaResponseList;
     }
 
-    /* 查詢條件 subject start end*/
+    /* 查詢條件 subject start end */
+    //要注意一下 if 下得有點錯誤
     public List<NfaResponse> getSubjectAndStartAndEnd(String subject, String startDate, String endDate) throws Exception{
         try {
             List<Nfa> responseList = new ArrayList<>();
@@ -68,15 +67,26 @@ public class NfaService {
                 responseList = nfaRepository.findByNfaSubjectContaining(subject);
             }
             if(startDate != null || endDate != null){
-                    responseList = nfaRepository.findByNfaSTime(startDate);
                     responseList.stream().filter(start->start.getNfaETime().equals(endDate)).collect(Collectors.toList());
+                    responseList.stream().filter(end->end.getNfaUTime().equals(startDate)).collect(Collectors.toList());
 
             }else if(startDate == null && endDate !=null){
                 responseList = nfaRepository.findByNfaETime(endDate);
             }else if( startDate != null && endDate == null){
                 responseList = nfaRepository.findByNfaSTime(startDate);
             }
+//            else{
+//                if(startDate != null && endDate == null){
+//                    responseList = nfaRepository.findByNfaSTime(startDate);
+//                }else if(startDate ==null && endDate != null){
+//                    responseList = nfaRepository.findByNfaETime(endDate);
+//                }else if(startDate != null && endDate != null){
+//                    responseList = nfaRepository.findByNfaSTime(startDate);
+//                    responseList.stream().filter(end->end)
+//                }
+//            }
             responseList = responseList.stream().filter(type->type.getNfaEnable().equals("Y")).collect(Collectors.toList());
+
             if(responseList.isEmpty()){
                 throw new DataNotFoundException("資料不存在");
             }
